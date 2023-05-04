@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Base de datos</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto">
+        <center><h1 class="text-2xl font-bold mb-4">Base de datos</h1></center>
+        <div class="mb-4">
+            <label for="search" class="sr-only">Search</label>
+            <input type="text" id="search" placeholder="Busqueda..." class="px-4 py-2 rounded-lg bg-gray-800 text-white w-full">
+        </div>
+        <table class="table-fixed w-full bg-gray-800">
+            <thead>
+                <tr class="bg-gray-700">
+                    {% for header in data[0] %}
+                    <th class="px-4 py-2">{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                {% for row in data[1:] %}
+                <tr class="border border-gray-600">
+                    {% for cell in row %}
+                    <td class="px-4 py-2">{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+      const searchInput = document.getElementById('search');
+      const tableBody = document.getElementById('table-body');
+      const rows = tableBody.getElementsByTagName('tr');
+      
+      // Add event listener to search input
+      searchInput.addEventListener('input', function() {
+          const queries = this.value.toLowerCase().split(',');
+      
+          // Loop through table rows and hide/show based on search queries
+          for (let i = 0; i < rows.length; i++) {
+              const cells = rows[i].getElementsByTagName('td');
+              let found = true;
+      
+              for (let j = 0; j < queries.length; j++) {
+                  const query = queries[j].trim();
+      
+                  if (query !== '') {
+                      let cellFound = false;
+      
+                      for (let k = 0; k < cells.length; k++) {
+                          const cellText = cells[k].textContent.toLowerCase();
+                          if (cellText.includes(query)) {
+                              cellFound = true;
+                              break;
+                          }
+                      }
+      
+                      if (!cellFound) {
+                          found = false;
+                          break;
+                      }
+                  }
+              }
+      
+              if (found) {
+                  rows[i].style.display = '';
+              } else {
+                  rows[i].style.display = 'none';
+              }
+          }
+      });
+    </script>     
+</body>
+</html>
